@@ -59,7 +59,7 @@ h1 {
 }
 
 .demo-section {
-  max-width: 900px;
+  max-width: 1100px;
   margin: 32px auto 0 auto;
   background: #222;
   border-radius: 12px;
@@ -67,13 +67,25 @@ h1 {
   padding: 24px;
 }
 
+/* Two-column layout */
+.two-column {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 20px;
+  align-items: start;
+}
+.col-left { }
+.col-right { }
+
 #map {
   width: 100%;
-  height: 480px;
+  height: 560px;
   border-radius: 8px;
   border: 2px solid #00ff99;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
+
+.map-caption { color: #9fcfc1; font-size: 0.9rem; margin-top: 6px; }
 
 .ship-info {
   background: #232a36;
@@ -83,6 +95,30 @@ h1 {
   margin-bottom: 8px;
   color: #00ff99;
 }
+
+.controls-panel {
+  background: #161a22;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+.controls-panel h3 { color: #8ec3b9; }
+
+.playback { display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:10px; }
+.playback button { background:#007bff; color:white; border:none; padding:8px 10px; border-radius:6px; cursor:pointer; }
+.playback button:hover { transform:translateY(-1px); }
+.playback input[type='range'] { width: 140px; }
+
+.selectors { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+.selectors label { font-size:0.9rem; color:#bfeadf; }
+.selectors select { background:#334e87; color:#8ec3b9; border:1px solid #00ff99; padding:6px; border-radius:6px; }
+.selectors input[type='checkbox'] { margin-right:6px; }
+
+.report-panel { margin-top:14px; background:#15171b; padding:12px; border-radius:8px; border:1px solid rgba(255,255,255,0.03); }
+.summary-list { list-style:none; padding-left:0; }
+.summary-list li { margin-bottom:6px; color:#cfeee4; }
+.sample-rows { white-space:pre-wrap; background:#0f1113; padding:8px; border-radius:6px; color:#bfeadf; max-height:160px; overflow:auto; }
 
 .controls {
   position: absolute;
@@ -174,16 +210,27 @@ label {
   margin-top: 32px;
 }
 
-@media (max-width: 600px) {
-  .demo-section, .features-section, .contact-section {
-    padding: 12px;
-  }
-  #map {
-    height: 300px;
-  }
+@media (max-width: 1000px) {
+  .two-column { grid-template-columns: 1fr 320px; }
+  #map { height: 480px; }
+}
+
+@media (max-width: 800px) {
+  .demo-section { padding: 12px; }
+  .two-column { grid-template-columns: 1fr; }
+  #map { height: 360px; }
 }
 
 /* Leaflet map styling compatibility */
-.leaflet-container {
-  border-radius: 8px;
-}
+.leaflet-container { border-radius: 8px; }
+
+/* Themes */
+.theme-modern { --accent: #00ff99; --bg: #0f1720; }
+.theme-vintage { --accent: #d9a065; --bg: #2b2418; }
+.theme-flat { --accent: #3478f6; --bg: #f4f6f8; color: #222; }
+
+/* Ship icon for leaflet */
+.leaflet-ship-icon .ship-arrow { font-size:20px; transform: rotate(0deg); }
+
+/* Accessibility focus */
+button:focus, select:focus, input:focus { outline: 2px solid rgba(0,255,153,0.6); outline-offset: 2px; }

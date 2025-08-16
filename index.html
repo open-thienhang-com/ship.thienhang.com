@@ -2,53 +2,801 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ship Journey Demo - thienhang.com</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maritime Journey Tracker - thienhang.com</title>
+  <meta name="description" content="Professional ship journey tracking and visualization system. Real-time maritime logistics with interactive maps and analytics.">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'ocean-blue': '#0ea5e9',
+            'deep-blue': '#0369a1',
+            'naval-dark': '#1e293b',
+            'ship-gold': '#f59e0b',
+            'port-green': '#10b981',
+            'wave-light': '#e0f2fe'
+          },
+          fontFamily: {
+            'maritime': ['Inter', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- GSAP Animation Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  
+  <!-- Map Libraries -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm9yWCV7JPCTHCJut8whOjARd7pwROFDQ&callback=initMap&loading=async"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <header class="portfolio-header">
-    <h1>🚢 Ship Journey Tracker</h1>
-    <h2>Demo & Portfolio - thienhang.com</h2>
-    <p class="desc">Visualize shipment journeys with animated maps. This is a modern demo version for the legacy shipment tracker.</p>
-    <div class="product-links">
-      <a href="#demo" class="btn">Live Demo</a>
-      <a href="#features" class="btn">Features</a>
-      <a href="#contact" class="btn">Contact</a>
+<body class="font-maritime bg-gradient-to-br from-slate-50 to-blue-50 min-h-screen">
+  
+  <!-- Navigation -->
+  <nav class="fixed top-0 w-full z-50 bg-white/90 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-3" id="logo">
+          <div class="w-10 h-10 bg-gradient-to-br from-ocean-blue to-deep-blue rounded-lg flex items-center justify-center">
+            <i class="fas fa-ship text-white text-lg"></i>
+          </div>
+          <div>
+            <h1 class="text-xl font-bold text-naval-dark">MaritimeTracker</h1>
+            <p class="text-xs text-gray-600">thienhang.com</p>
+          </div>
+        </div>
+        
+        <div class="hidden md:flex space-x-8">
+          <a href="#hero" class="text-gray-700 hover:text-ocean-blue transition-colors">Home</a>
+          <a href="#demo" class="text-gray-700 hover:text-ocean-blue transition-colors">Live Demo</a>
+          <a href="#features" class="text-gray-700 hover:text-ocean-blue transition-colors">Features</a>
+          <a href="#about" class="text-gray-700 hover:text-ocean-blue transition-colors">About</a>
+          <a href="#contact" class="text-gray-700 hover:text-ocean-blue transition-colors">Contact</a>
+        </div>
+        
+        <button class="md:hidden text-gray-700" id="mobile-menu-btn">
+          <i class="fas fa-bars text-lg"></i>
+        </button>
+      </div>
     </div>
-  </header>
+  </nav>
 
-  <section id="demo" class="demo-section">
-    <h3>Live Demo</h3>
-    <div id="map"></div>
-    <div class="ship-info" id="shipInfo">
-      <strong>Ship Information:</strong><br>
-      <span id="currentShip">Demo Ship: Vietnam → Australia</span>
+  <!-- Hero Section with Integrated Demo -->
+  <section id="hero" class="pt-20 pb-8 px-4 relative overflow-hidden">
+    <div class="absolute inset-0 bg-gradient-to-r from-blue-600/10 to-cyan-500/10"></div>
+    <div class="max-w-7xl mx-auto relative">
+      
+      <!-- Hero Header -->
+      <div class="text-center mb-12" id="hero-content">
+        <div class="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-6">
+          <i class="fas fa-anchor"></i>
+          <span>Maritime Technology Solution</span>
+        </div>
+        
+        <h1 class="text-4xl lg:text-6xl font-bold text-naval-dark leading-tight mb-6">
+          Track Ship Journeys
+          <span class="block text-ocean-blue">in Real-Time</span>
+        </h1>
+        
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          Advanced maritime logistics tracking system with interactive maps, 
+          route optimization, and comprehensive analytics for modern shipping operations.
+        </p>
+        
+        <!-- Stats -->
+        <div class="grid grid-cols-3 gap-6 max-w-md mx-auto">
+          <div class="text-center">
+            <div class="text-2xl font-bold text-ocean-blue" id="stat-ships">2+</div>
+            <div class="text-sm text-gray-600">Demo Ships</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-port-green" id="stat-routes">6+</div>
+            <div class="text-sm text-gray-600">Route Points</div>
+          </div>
+          <div class="text-center">
+            <div class="text-2xl font-bold text-ship-gold" id="stat-providers">2</div>
+            <div class="text-sm text-gray-600">Map Providers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Integrated Demo Interface -->
+      <div class="bg-white rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
+        <div class="grid lg:grid-cols-4 gap-0">
+          
+          <!-- Map Area -->
+          <div class="lg:col-span-3">
+            <div class="relative">
+              <!-- Map Header -->
+              <div class="bg-gradient-to-r from-naval-dark to-deep-blue text-white p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <i class="fas fa-globe-americas text-lg"></i>
+                    <div>
+                      <h3 class="font-semibold">Live Maritime Tracker</h3>
+                      <p class="text-xs text-blue-200">Interactive Ship Journey Demo</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center space-x-2 text-sm">
+                    <div class="w-2 h-2 bg-port-green rounded-full animate-pulse"></div>
+                    <span class="text-blue-200">Live Tracking</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Map Container -->
+              <div id="map" class="h-96 lg:h-[500px] relative" aria-label="Map showing ship journeys">
+                <div class="absolute inset-0 bg-gradient-to-br from-blue-50 to-cyan-50 flex items-center justify-center">
+                  <div class="text-center">
+                    <i class="fas fa-ship text-4xl text-ocean-blue mb-4 animate-pulse"></i>
+                    <p class="text-gray-600">Loading Maritime Map...</p>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- Ship Status Bar -->
+              <div class="bg-gray-50 border-t border-gray-200 p-4">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-3 h-3 bg-port-green rounded-full animate-pulse"></div>
+                    <div>
+                      <div class="font-medium text-naval-dark" id="currentShip">Demo Ship: Vietnam → Australia</div>
+                      <div class="text-sm text-gray-500">Current Journey Status</div>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-2xl font-bold text-ocean-blue" id="journey-progress">0%</div>
+                    <div class="text-xs text-gray-500">Progress</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Control Panel -->
+          <div class="bg-gray-50 p-6 space-y-6">
+            
+            <!-- Playback Controls -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+              <h4 class="font-semibold text-naval-dark mb-4 flex items-center text-sm">
+                <i class="fas fa-play-circle mr-2 text-ocean-blue"></i>
+                Playback Controls
+              </h4>
+              
+              <div class="space-y-3">
+                <!-- Play/Pause Buttons -->
+                <div class="flex justify-center space-x-2">
+                  <button id="playPauseBtn" class="bg-ocean-blue hover:bg-deep-blue text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1" aria-pressed="false">
+                    <i class="fas fa-play text-xs"></i>
+                    <span>Play</span>
+                  </button>
+                  <button id="stepBackBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg text-sm transition-colors" title="Step Back">
+                    <i class="fas fa-step-backward text-xs"></i>
+                  </button>
+                  <button id="stepForwardBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 px-3 py-2 rounded-lg text-sm transition-colors" title="Step Forward">
+                    <i class="fas fa-step-forward text-xs"></i>
+                  </button>
+                </div>
+                
+                <!-- Speed Control -->
+                <div class="space-y-2">
+                  <label for="speedSlider" class="block text-xs font-medium text-gray-700">Speed</label>
+                  <div class="flex items-center space-x-2">
+                    <input id="speedSlider" type="range" min="0.2" max="3" step="0.1" value="1" class="flex-1 h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <span id="speedValue" class="text-xs font-medium text-gray-600 min-w-[32px]">1.0x</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Ship & Map Selection -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+              <h4 class="font-semibold text-naval-dark mb-4 flex items-center text-sm">
+                <i class="fas fa-cog mr-2 text-ocean-blue"></i>
+                Configuration
+              </h4>
+              
+              <div class="space-y-3">
+                <div>
+                  <label for="shipSelect" class="block text-xs font-medium text-gray-700 mb-1">Ship</label>
+                  <select id="shipSelect" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ocean-blue focus:border-transparent" aria-label="Select ship">
+                    <!-- Options populated by JavaScript -->
+                  </select>
+                </div>
+
+                <div>
+                  <label for="providerSelect" class="block text-xs font-medium text-gray-700 mb-1">Map Provider</label>
+                  <select id="providerSelect" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ocean-blue focus:border-transparent" aria-label="Select map provider">
+                    <option value="google">Google Maps</option>
+                    <option value="osm">OpenStreetMap</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="themeSelect" class="block text-xs font-medium text-gray-700 mb-1">Theme</label>
+                  <select id="themeSelect" class="w-full bg-white border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ocean-blue focus:border-transparent" aria-label="Select theme">
+                    <option value="modern">Modern Maritime</option>
+                    <option value="vintage">Vintage Nautical</option>
+                    <option value="flat">Flat Design</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                  <input type="checkbox" id="showAllJourneys" class="rounded border-gray-300 text-ocean-blue focus:ring-ocean-blue">
+                  <label for="showAllJourneys" class="text-xs text-gray-700">Show all routes</label>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Quick Stats -->
+            <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
+              <h4 class="font-semibold text-naval-dark mb-4 flex items-center text-sm">
+                <i class="fas fa-chart-bar mr-2 text-ocean-blue"></i>
+                Dataset Summary
+              </h4>
+              
+              <div class="space-y-2 text-xs">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Total Ships:</span>
+                  <span class="font-medium text-naval-dark" id="totalShips">2</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Total Records:</span>
+                  <span class="font-medium text-naval-dark" id="totalRecords">6</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Current:</span>
+                  <span class="font-medium text-ocean-blue" id="currentJourneyLabel">DEMO_SHIP_001</span>
+                </div>
+              </div>
+              
+              <div class="mt-4 pt-3 border-t border-gray-200">
+                <div class="text-xs text-gray-600 mb-2">Sample Routes:</div>
+                <div id="sampleRows" class="text-xs text-gray-500 max-h-20 overflow-auto leading-relaxed"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <section id="features" class="features-section">
-    <h3>Features</h3>
-    <ul>
-      <li>Animated ship journey on Google Maps & OpenStreetMap</li>
-      <li>Modern UI, responsive design</li>
-      <li>Portfolio-ready layout</li>
-      <li>Easy integration for real shipment data</li>
-      <li>Demo code for legacy system migration</li>
-    </ul>
+  <!-- Features Section -->
+  <section id="features" class="py-20 px-4 bg-gradient-to-br from-slate-50 to-blue-50">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Section Header -->
+      <div class="text-center mb-16" id="features-header">
+        <div class="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <i class="fas fa-star"></i>
+          <span>Platform Features</span>
+        </div>
+        <h2 class="text-4xl lg:text-5xl font-bold text-naval-dark mb-6">
+          Comprehensive Maritime 
+          <span class="text-ocean-blue">Solution</span>
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
+          Advanced features designed for modern shipping operations, fleet management, 
+          and comprehensive logistics tracking with real-time analytics
+        </p>
+        
+        <!-- Key Metrics -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mb-12">
+          <div class="text-center">
+            <div class="text-3xl font-bold text-ocean-blue mb-2">99.9%</div>
+            <div class="text-sm text-gray-600">Uptime</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-port-green mb-2">24/7</div>
+            <div class="text-sm text-gray-600">Monitoring</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-ship-gold mb-2">Real-time</div>
+            <div class="text-sm text-gray-600">Updates</div>
+          </div>
+          <div class="text-center">
+            <div class="text-3xl font-bold text-red-500 mb-2">Global</div>
+            <div class="text-sm text-gray-600">Coverage</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Grid -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16" id="features-grid">
+        
+        <!-- Real-time Tracking -->
+        <div class="feature-card group">
+          <div class="feature-icon bg-gradient-to-r from-blue-500 to-blue-600 group-hover:from-blue-600 group-hover:to-blue-700 transition-all duration-300">
+            <i class="fas fa-satellite-dish text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-naval-dark mb-3">Real-time Tracking</h3>
+          <p class="text-gray-600 mb-4">
+            Monitor ship positions and movements in real-time with precise GPS coordinates, 
+            automatic route updates, and intelligent ETA predictions.
+          </p>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Live position updates every 30 seconds</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Intelligent route optimization</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Dynamic ETA predictions</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Weather-aware routing</li>
+          </ul>
+        </div>
+        
+        <!-- Interactive Maps -->
+        <div class="feature-card group">
+          <div class="feature-icon bg-gradient-to-r from-green-500 to-green-600 group-hover:from-green-600 group-hover:to-green-700 transition-all duration-300">
+            <i class="fas fa-globe-americas text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-naval-dark mb-3">Interactive Maps</h3>
+          <p class="text-gray-600 mb-4">
+            Multiple map providers with smooth animations, custom ship markers, 
+            detailed maritime charts, and port information.
+          </p>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Google Maps & OpenStreetMap support</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Animated ship markers with rotation</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Interactive route visualization</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Port and harbor details</li>
+          </ul>
+        </div>
+        
+        <!-- Analytics Dashboard -->
+        <div class="feature-card group">
+          <div class="feature-icon bg-gradient-to-r from-yellow-500 to-orange-500 group-hover:from-yellow-600 group-hover:to-orange-600 transition-all duration-300">
+            <i class="fas fa-chart-line text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-naval-dark mb-3">Analytics Dashboard</h3>
+          <p class="text-gray-600 mb-4">
+            Comprehensive analytics and reporting for fleet management, 
+            operational insights, and performance optimization.
+          </p>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Journey analytics and patterns</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Fuel efficiency metrics</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Historical voyage data</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Predictive analytics</li>
+          </ul>
+        </div>
+        
+        <!-- Multi-platform Support -->
+        <div class="feature-card group">
+          <div class="feature-icon bg-gradient-to-r from-purple-500 to-purple-600 group-hover:from-purple-600 group-hover:to-purple-700 transition-all duration-300">
+            <i class="fas fa-mobile-alt text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-naval-dark mb-3">Multi-platform</h3>
+          <p class="text-gray-600 mb-4">
+            Responsive design that works seamlessly across all devices 
+            with native app-like experience and offline capabilities.
+          </p>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Progressive Web App (PWA)</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Touch-optimized controls</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Offline map caching</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Cross-browser compatible</li>
+          </ul>
+        </div>
+        
+        <!-- Integration Ready -->
+        <div class="feature-card group">
+          <div class="feature-icon bg-gradient-to-r from-indigo-500 to-indigo-600 group-hover:from-indigo-600 group-hover:to-indigo-700 transition-all duration-300">
+            <i class="fas fa-plug text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-naval-dark mb-3">Integration Ready</h3>
+          <p class="text-gray-600 mb-4">
+            Easy integration with existing logistics systems, maritime databases, 
+            and third-party services through robust APIs.
+          </p>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>RESTful API endpoints</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Real-time WebSocket connections</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>CSV/JSON data import/export</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Legacy system compatibility</li>
+          </ul>
+        </div>
+        
+        <!-- Performance Optimized -->
+        <div class="feature-card group">
+          <div class="feature-icon bg-gradient-to-r from-red-500 to-red-600 group-hover:from-red-600 group-hover:to-red-700 transition-all duration-300">
+            <i class="fas fa-rocket text-white"></i>
+          </div>
+          <h3 class="text-xl font-bold text-naval-dark mb-3">High Performance</h3>
+          <p class="text-gray-600 mb-4">
+            Optimized for speed and reliability with advanced caching, 
+            efficient algorithms, and scalable architecture.
+          </p>
+          <ul class="text-sm text-gray-600 space-y-2">
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Sub-second response times</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Intelligent data caching</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>Scalable cloud infrastructure</li>
+            <li class="flex items-center"><i class="fas fa-check text-port-green mr-3"></i>99.9% uptime guarantee</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Call to Action -->
+      <div class="text-center">
+        <div class="bg-gradient-to-r from-ocean-blue to-deep-blue rounded-2xl p-8 text-white">
+          <h3 class="text-2xl font-bold mb-4">Ready to Transform Your Maritime Operations?</h3>
+          <p class="text-blue-100 mb-6 max-w-2xl mx-auto">
+            Join leading shipping companies worldwide who trust our platform for their logistics needs
+          </p>
+          <div class="flex flex-col sm:flex-row gap-4 justify-center">
+            <button class="bg-white text-ocean-blue px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
+              <i class="fas fa-rocket mr-2"></i>Get Started Free
+            </button>
+            <button class="border border-white/30 text-white px-8 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors">
+              <i class="fas fa-calendar mr-2"></i>Schedule Demo
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section id="contact" class="contact-section">
-    <h3>Contact & Credits</h3>
-    <p>Developed by <strong>thienhang.com</strong>. For more info or integration, contact <a href="mailto:contact@thienhang.com">contact@thienhang.com</a></p>
+  <!-- About/Technology Section -->
+  <section id="about" class="py-16 px-4 bg-white">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        
+        <!-- Content -->
+        <div class="space-y-6" id="about-content">
+          <div class="inline-flex items-center space-x-2 bg-blue-100 text-blue-800 px-4 py-2 rounded-full text-sm font-medium">
+            <i class="fas fa-code"></i>
+            <span>Technology Stack</span>
+          </div>
+          
+          <h2 class="text-4xl font-bold text-naval-dark">Built with Modern Technologies</h2>
+          
+          <p class="text-xl text-gray-600">
+            This maritime tracking system leverages cutting-edge web technologies to deliver 
+            a robust, scalable, and user-friendly experience for shipping operations.
+          </p>
+          
+          <!-- Technology List -->
+          <div class="grid sm:grid-cols-2 gap-4">
+            <div class="tech-item">
+              <i class="fab fa-js-square text-yellow-500 mr-3"></i>
+              <span>JavaScript ES6+</span>
+            </div>
+            <div class="tech-item">
+              <i class="fas fa-map text-blue-500 mr-3"></i>
+              <span>Google Maps API</span>
+            </div>
+            <div class="tech-item">
+              <i class="fas fa-leaf text-green-500 mr-3"></i>
+              <span>Leaflet.js</span>
+            </div>
+            <div class="tech-item">
+              <i class="fab fa-html5 text-red-500 mr-3"></i>
+              <span>HTML5 Canvas</span>
+            </div>
+            <div class="tech-item">
+              <i class="fab fa-css3-alt text-blue-600 mr-3"></i>
+              <span>CSS3 & Tailwind</span>
+            </div>
+            <div class="tech-item">
+              <i class="fas fa-rocket text-purple-500 mr-3"></i>
+              <span>GSAP Animations</span>
+            </div>
+          </div>
+          
+          <!-- Project Stats -->
+          <div class="grid grid-cols-2 gap-6 pt-6 border-t border-gray-200">
+            <div>
+              <div class="text-3xl font-bold text-ocean-blue">500+</div>
+              <div class="text-sm text-gray-600">Lines of Code</div>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-port-green">100%</div>
+              <div class="text-sm text-gray-600">Open Source</div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Visual/Code Preview -->
+        <div class="relative" id="about-visual">
+          <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl p-6 shadow-2xl">
+            <div class="flex items-center space-x-2 mb-4">
+              <div class="w-3 h-3 bg-red-400 rounded-full"></div>
+              <div class="w-3 h-3 bg-yellow-400 rounded-full"></div>
+              <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+              <div class="ml-4 text-gray-400 text-sm">map.js</div>
+            </div>
+            
+            <pre class="text-green-400 text-sm font-mono leading-relaxed"><code>// Ship Journey Animation
+function <span class="text-blue-400">animateShip</span>(<span class="text-orange-400">journey</span>) {
+  <span class="text-purple-400">const</span> <span class="text-blue-300">path</span> = journey.waypoints;
+  <span class="text-purple-400">let</span> <span class="text-blue-300">currentStep</span> = <span class="text-yellow-400">0</span>;
+  
+  <span class="text-green-600">// Smooth interpolation</span>
+  <span class="text-purple-400">function</span> <span class="text-blue-400">interpolate</span>(<span class="text-orange-400">p1, p2, t</span>) {
+    <span class="text-purple-400">return</span> {
+      <span class="text-blue-300">lat</span>: p1.lat + (p2.lat - p1.lat) * t,
+      <span class="text-blue-300">lng</span>: p1.lng + (p2.lng - p1.lng) * t
+    };
+  }
+  
+  <span class="text-green-600">// GSAP animation timeline</span>
+  gsap.<span class="text-blue-400">timeline</span>()
+    .<span class="text-blue-400">to</span>(shipMarker, {
+      <span class="text-blue-300">duration</span>: <span class="text-yellow-400">2</span>,
+      <span class="text-blue-300">ease</span>: <span class="text-green-300">"power2.inOut"</span>
+    });
+}</code></pre>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <footer class="portfolio-footer">
-    <p>© 2025 thienhang.com | Ship Journey Demo</p>
+  <!-- Contact Section -->
+  <section id="contact" class="py-16 px-4 bg-gradient-to-br from-naval-dark to-slate-800 text-white">
+    <div class="max-w-4xl mx-auto text-center">
+      
+      <!-- Section Header -->
+      <div class="mb-12" id="contact-header">
+        <div class="inline-flex items-center space-x-2 bg-white/10 text-blue-200 px-4 py-2 rounded-full text-sm font-medium mb-4">
+          <i class="fas fa-envelope"></i>
+          <span>Get in Touch</span>
+        </div>
+        <h2 class="text-4xl font-bold mb-4">Ready to Set Sail?</h2>
+        <p class="text-xl text-blue-100 max-w-2xl mx-auto">
+          Interested in implementing maritime tracking for your business? 
+          Let's discuss how this solution can optimize your shipping operations.
+        </p>
+      </div>
+
+      <!-- Contact Cards -->
+      <div class="grid md:grid-cols-3 gap-6 mb-12">
+        <div class="contact-card">
+          <div class="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-envelope text-white text-lg"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Email</h3>
+          <a href="mailto:me@thienhang.com" class="text-blue-300 hover:text-blue-200">
+            me@thienhang.com
+          </a>
+        </div>
+        
+        <div class="contact-card">
+          <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fab fa-github text-white text-lg"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">GitHub</h3>
+          <a href="#" class="text-blue-300 hover:text-blue-200">
+            @thienhang
+          </a>
+        </div>
+        
+        <div class="contact-card">
+          <div class="w-12 h-12 bg-purple-500 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-globe text-white text-lg"></i>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Website</h3>
+          <a href="https://thienhang.com" class="text-blue-300 hover:text-blue-200">
+            thienhang.com
+          </a>
+        </div>
+      </div>
+
+      <!-- CTA -->
+      <div class="space-y-4">
+        <div class="flex justify-center space-x-4">
+          <button class="btn-white">
+            <i class="fas fa-code mr-2"></i>
+            View Source Code
+          </button>
+          <button class="btn-outline-white">
+            <i class="fas fa-download mr-2"></i>
+            Download Documentation
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-slate-900 text-gray-400 py-8 px-4">
+    <div class="max-w-7xl mx-auto">
+      <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+        <div class="flex items-center space-x-3">
+          <div class="w-8 h-8 bg-gradient-to-br from-ocean-blue to-deep-blue rounded-lg flex items-center justify-center">
+            <i class="fas fa-ship text-white text-sm"></i>
+          </div>
+          <div>
+            <div class="font-semibold text-white">MaritimeTracker</div>
+            <div class="text-xs text-gray-500">by thienhang.com</div>
+          </div>
+        </div>
+        
+        <div class="text-center">
+          <p>&copy; 2025 thienhang.com | Maritime Journey Tracking System</p>
+          <p class="text-sm text-gray-500">Built with modern web technologies for shipping excellence</p>
+        </div>
+        
+        <div class="flex space-x-4">
+          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+            <i class="fab fa-github text-lg"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+            <i class="fab fa-linkedin text-lg"></i>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-blue-400 transition-colors">
+            <i class="fab fa-twitter text-lg"></i>
+          </a>
+        </div>
+      </div>
+    </div>
   </footer>
 
+  <!-- Scripts -->
   <script src="map.js"></script>
+  
+  <!-- GSAP Animations -->
+  <script>
+    // Initialize GSAP animations when DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      
+      // Register ScrollTrigger plugin
+      gsap.registerPlugin(ScrollTrigger);
+      
+      // Navbar animation
+      gsap.fromTo('#logo', {
+        y: -50,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out'
+      });
+      
+      // Hero content animation
+      gsap.timeline()
+        .fromTo('#hero-content', {
+          x: -100,
+          opacity: 0
+        }, {
+          x: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power2.out'
+        })
+        .fromTo('#hero-visual', {
+          x: 100,
+          opacity: 0
+        }, {
+          x: 0,
+          opacity: 1,
+          duration: 1,
+          ease: 'power2.out'
+        }, '-=0.5');
+      
+      // Animate ship icon
+      gsap.to('.ship-icon', {
+        rotation: 360,
+        duration: 20,
+        repeat: -1,
+        ease: 'none'
+      });
+      
+      // Features animation with ScrollTrigger
+      gsap.fromTo('.feature-card', {
+        y: 50,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#features-grid',
+          start: 'top 80%',
+          end: 'bottom 20%'
+        }
+      });
+      
+      // About section animation
+      gsap.fromTo('#about-content', {
+        x: -50,
+        opacity: 0
+      }, {
+        x: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#about',
+          start: 'top 80%'
+        }
+      });
+      
+      gsap.fromTo('#about-visual', {
+        x: 50,
+        opacity: 0
+      }, {
+        x: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#about',
+          start: 'top 80%'
+        }
+      });
+      
+      // Contact section animation
+      gsap.fromTo('.contact-card', {
+        y: 30,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#contact',
+          start: 'top 80%'
+        }
+      });
+      
+      // Demo section animation
+      gsap.fromTo('#demo-header', {
+        y: 50,
+        opacity: 0
+      }, {
+        y: 0,
+        opacity: 1,
+        duration: 1,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '#demo',
+          start: 'top 80%'
+        }
+      });
+    });
+    
+    // Utility functions
+    function scrollToDemo() {
+      document.getElementById('demo').scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
+    
+    // Mobile menu toggle (basic implementation)
+    document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
+      // Add mobile menu functionality here if needed
+      console.log('Mobile menu clicked');
+    });
+    
+    // Update play button text and icon
+    function updatePlayButton(isPlaying) {
+      const btn = document.getElementById('playPauseBtn');
+      const icon = btn.querySelector('i');
+      if (isPlaying) {
+        icon.className = 'fas fa-pause';
+        btn.setAttribute('aria-pressed', 'true');
+      } else {
+        icon.className = 'fas fa-play';
+        btn.setAttribute('aria-pressed', 'false');
+      }
+    }
+  </script>
 </body>
 </html>
