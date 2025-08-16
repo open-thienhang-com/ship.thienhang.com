@@ -2,14 +2,53 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Ship Map - thienhang.com</title>
+  <title>Ship Journey Demo - thienhang.com</title>
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAm9yWCV7JPCTHCJut8whOjARd7pwROFDQ&callback=initMap&loading=async"></script>
 </head>
 <body>
-  <h1>Ship Map - thienhang.com</h1>
-  <div id="map" style="height: 600px;"></div>
+  <header class="portfolio-header">
+    <h1>🚢 Ship Journey Tracker</h1>
+    <h2>Demo & Portfolio - thienhang.com</h2>
+    <p class="desc">Visualize shipment journeys with animated maps. This is a modern demo version for the legacy shipment tracker.</p>
+    <div class="product-links">
+      <a href="#demo" class="btn">Live Demo</a>
+      <a href="#features" class="btn">Features</a>
+      <a href="#contact" class="btn">Contact</a>
+    </div>
+  </header>
+
+  <section id="demo" class="demo-section">
+    <h3>Live Demo</h3>
+    <div id="map"></div>
+    <div class="ship-info" id="shipInfo">
+      <strong>Ship Information:</strong><br>
+      <span id="currentShip">Demo Ship: Vietnam → Australia</span>
+    </div>
+  </section>
+
+  <section id="features" class="features-section">
+    <h3>Features</h3>
+    <ul>
+      <li>Animated ship journey on Google Maps & OpenStreetMap</li>
+      <li>Modern UI, responsive design</li>
+      <li>Portfolio-ready layout</li>
+      <li>Easy integration for real shipment data</li>
+      <li>Demo code for legacy system migration</li>
+    </ul>
+  </section>
+
+  <section id="contact" class="contact-section">
+    <h3>Contact & Credits</h3>
+    <p>Developed by <strong>thienhang.com</strong>. For more info or integration, contact <a href="mailto:contact@thienhang.com">contact@thienhang.com</a></p>
+  </section>
+
+  <footer class="portfolio-footer">
+    <p>© 2025 thienhang.com | Ship Journey Demo</p>
+  </footer>
+
   <script src="map.js"></script>
 </body>
 </html>
